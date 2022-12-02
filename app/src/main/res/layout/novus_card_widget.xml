@@ -2,18 +2,22 @@
     android:id="@+id/root"
     style="@style/Widget.NovusWidget.AppWidget.Container"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-
+    android:layout_height="match_parent"
     android:theme="@style/Theme.NovusWidget.AppWidgetContainer">
 
-    <TextView
-        android:id="@+id/novus_text"
+    <ListView
+        android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:maxLines="1"
-        android:text="NOVUS"
-        android:textAlignment="center"
-        android:textColor="@color/green"
-        android:textSize="40sp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:loopViews="true" />
+
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="add first card"
+        android:textSize="20sp"
         android:textStyle="bold" />
 </RelativeLayout>

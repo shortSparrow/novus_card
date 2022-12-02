@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        Log.d("XXXXXX", intent?.getIntExtra("title", -1).toString())
         try {
             oldBrightness =
                 Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS)
@@ -62,4 +63,9 @@ class MainActivity : AppCompatActivity() {
     private fun setBrightness(value: Int) {
         Settings.System.putInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS, value); }
 
+
+    override fun onNewIntent(intent: Intent?) {
+        Log.d("XXXXXX_2", intent?.getIntExtra("title", -1).toString())
+        super.onNewIntent(intent)
+    }
 }
