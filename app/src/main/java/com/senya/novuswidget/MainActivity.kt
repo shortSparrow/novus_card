@@ -1,5 +1,6 @@
 package com.senya.novuswidget
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -7,16 +8,34 @@ import android.os.Bundle
 import android.provider.Settings
 import android.provider.Settings.SettingNotFoundException
 import android.util.Log
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import com.senya.novuswidget.ui.Home
 
 const val MAX_BRIGHTNESS = 255
 
 class MainActivity : AppCompatActivity() {
     private var oldBrightness: Int? = null
 
+    init {
+        instance = this
+    }
+
+    companion object {
+        private var instance: MainActivity? = null
+
+        fun activityContext(): Context {
+            return instance!!.applicationContext
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
+        setContent {
+            Home()
+        }
 
         Log.d("XXXXXX", intent?.getIntExtra("title", -1).toString())
         try {
