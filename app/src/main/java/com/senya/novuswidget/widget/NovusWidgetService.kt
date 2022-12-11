@@ -1,4 +1,4 @@
-package com.senya.novuswidget
+package com.senya.novuswidget.widget
 
 import android.appwidget.AppWidgetManager
 import android.content.Context
@@ -7,12 +7,15 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
+import com.senya.novuswidget.R
+import com.senya.novuswidget.use_case.GetCardsFromStorageUseCase
 
 
-private const val mCount = 10
 data class WidgetItem(val title: String)
 
 class ListWidgetService : RemoteViewsService() {
+    val cardList = GetCardsFromStorageUseCase().invoke().toMutableList()
+
     override fun onGetViewFactory(intent: Intent): RemoteViewsFactory {
         return ListRemoteViewsFactory(applicationContext, intent)
     }
@@ -30,9 +33,10 @@ class ListWidgetService : RemoteViewsService() {
         }
 
         override fun onCreate() {
-            for (i in 1..mCount) {
-                Log.d("XXX", i.toString())
-                mWidgetItems.add(WidgetItem("Item$i"))
+            Log.d("XXXX", "onCreate")
+            cardList.forEach {
+                Log.d("XXXX_Item_Create", it.title)
+                mWidgetItems.add(WidgetItem(it.title))
             }
         }
 
@@ -41,7 +45,7 @@ class ListWidgetService : RemoteViewsService() {
         }
 
         override fun getCount(): Int {
-            return mCount
+            return cardList.size
         }
 
         // Given the position (index) of a WidgetItem in the array, use the item's text value in
@@ -85,6 +89,15 @@ class ListWidgetService : RemoteViewsService() {
         }
 
         override fun onDataSetChanged() {
+            Log.d("XXXX", "onDataSetChanged")
+            cardList.clear()
+            cardList.addAll(GetCardsFromStorageUseCase().invoke())
+
+            mWidgetItems.clear()
+            cardList.forEach {
+                Log.d("XXXX_Item_Update", it.title)
+                mWidgetItems.add(WidgetItem(it.title))
+            }
             // This is triggered when you call AppWidgetManager notifyAppWidgetViewDataChanged
             // on the collection view corresponding to this factory. You can do heaving lifting in
             // here, synchronously. For example, if you need to process an image, fetch something

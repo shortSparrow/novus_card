@@ -16,12 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NovusWidget"
         tools:targetApi="31">
-        <service android:name=".ListWidgetService"
+        <service android:name=".widget.ListWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"
             android:exported="false" />
 
         <receiver
-            android:name=".NovusCardWidgetProvider"
+            android:name=".widget.NovusCardWidgetProvider"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

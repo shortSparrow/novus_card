@@ -1,5 +1,7 @@
 package com.senya.novuswidget.use_case
 
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.ContextWrapper
 import android.graphics.Bitmap
@@ -8,6 +10,7 @@ import android.net.Uri
 import android.util.Log
 import com.google.gson.reflect.TypeToken
 import com.senya.novuswidget.*
+import com.senya.novuswidget.widget.NovusCardWidgetProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,6 +18,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.lang.reflect.Type
+
 
 class AddImageUseCase() {
     private val context = MainActivity.activityContext()
@@ -55,6 +59,7 @@ class AddImageUseCase() {
 
         updateSharedPreferencesData(newCardList)
 
+        updateWidget()
         return newCardList
     }
 
@@ -111,6 +116,18 @@ class AddImageUseCase() {
         }
     }
 
+    private fun updateWidget() {
+        val appWidgetManager = AppWidgetManager.getInstance(context)
+
+        val appWidgetIds = appWidgetManager.getAppWidgetIds(
+            ComponentName(
+                context,
+                NovusCardWidgetProvider::class.java
+            )
+        )
+        Log.d("XXXX_appWidgetId_UseCas", appWidgetIds.toString())
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_discount_card_list)
+    }
 }
 
 

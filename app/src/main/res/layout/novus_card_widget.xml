@@ -6,7 +6,7 @@
     android:theme="@style/Theme.NovusWidget.AppWidgetContainer">
 
     <ListView
-        android:id="@+id/list"
+        android:id="@+id/widget_discount_card_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"

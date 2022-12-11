@@ -1,15 +1,17 @@
-package com.senya.novuswidget
+package com.senya.novuswidget.widget
 
 import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.widget.RemoteViews
 import android.widget.Toast
+import com.senya.novuswidget.MainActivity
+import com.senya.novuswidget.R
 
 
 const val TOAST_ACTION = "com.example.android.stackwidget.TOAST_ACTION"
@@ -29,17 +31,17 @@ class NovusCardWidgetProvider : AppWidgetProvider() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
 
-       if(TOAST_ACTION == intent?.action) {
-           val viewIndex = intent.getIntExtra(EXTRA_ITEM, 0)
-           Toast.makeText(context, "Item" + viewIndex + " selected", Toast.LENGTH_SHORT)
-               .show()
+        if (TOAST_ACTION == intent?.action) {
+            val viewIndex = intent.getIntExtra(EXTRA_ITEM, 0)
+            Toast.makeText(context, "Item" + viewIndex + " selected", Toast.LENGTH_SHORT)
+                .show()
 
-           val intent2 =  Intent(context, MainActivity::class.java)
-           intent2.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-           intent2.putExtra("title", viewIndex)
-           val pendingIntent = PendingIntent.getActivity(context, 0, intent2, FLAG_UPDATE_CURRENT)
-           pendingIntent.send()
-       }
+            val intent2 = Intent(context, MainActivity::class.java)
+            intent2.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            intent2.putExtra("title", viewIndex)
+            val pendingIntent = PendingIntent.getActivity(context, 0, intent2, FLAG_UPDATE_CURRENT)
+            pendingIntent.send()
+        }
         super.onReceive(context, intent)
     }
 
@@ -65,6 +67,7 @@ internal fun updateAppWidget(
 //    views.setOnClickPendingIntent(R.id.root, pendingIntent)
 //    // Instruct the widget manager to update the widget
 //    appWidgetManager.updateAppWidget(appWidgetId, views)
+    Log.d("XXXX_appWidgetId: ", appWidgetId.toString())
 
 
     val intent = Intent(context, ListWidgetService::class.java)
@@ -89,10 +92,10 @@ internal fun updateAppWidget(
         context, 0,
         activityIntent, 0
     )
-    views.setPendingIntentTemplate(R.id.list, pendingIntent)
+    views.setPendingIntentTemplate(R.id.widget_discount_card_list, pendingIntent)
 
-    views.setRemoteAdapter(R.id.list, intent)
-    views.setEmptyView(R.id.list, R.id.empty_view)
+    views.setRemoteAdapter(R.id.widget_discount_card_list, intent)
+    views.setEmptyView(R.id.widget_discount_card_list, R.id.empty_view)
 
 
     appWidgetManager.updateAppWidget(appWidgetId, views)
