@@ -2,7 +2,11 @@ package com.senya.novuswidget.use_case
 
 import android.content.Context
 import com.google.gson.reflect.TypeToken
-import com.senya.novuswidget.*
+import com.senya.novuswidget.MainActivity
+import com.senya.novuswidget.domain.CardMapper
+import com.senya.novuswidget.domain.model.ShopItem
+import com.senya.novuswidget.domain.model.ShopItemSP
+import com.senya.novuswidget.gson
 import java.lang.reflect.Type
 
 class GetCardsFromStorageUseCase() {

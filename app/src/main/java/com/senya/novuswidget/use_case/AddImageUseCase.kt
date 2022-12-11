@@ -9,7 +9,13 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
 import com.google.gson.reflect.TypeToken
-import com.senya.novuswidget.*
+import com.senya.novuswidget.MainActivity
+import com.senya.novuswidget.R
+import com.senya.novuswidget.domain.CardMapper
+import com.senya.novuswidget.domain.model.ModifiedShopItem
+import com.senya.novuswidget.domain.model.ShopItem
+import com.senya.novuswidget.domain.model.ShopItemSP
+import com.senya.novuswidget.gson
 import com.senya.novuswidget.widget.NovusCardWidgetProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

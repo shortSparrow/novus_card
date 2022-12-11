@@ -1,6 +1,5 @@
 package com.senya.novuswidget
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -10,8 +9,8 @@ import android.provider.Settings.SettingNotFoundException
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import com.senya.novuswidget.ui.Home
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.senya.novuswidget.ui.home.Home
 
 const val MAX_BRIGHTNESS = 255
 
@@ -25,19 +24,23 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private var instance: MainActivity? = null
 
-        fun activityContext(): Context {
-            return instance!!.applicationContext
+        fun activityContext(): AppCompatActivity {
+            return instance!!
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        Log.d("XXXXXX", intent?.getIntExtra("title", 0).toString())
+
         setContent {
-            Home()
+            val vm: HomeViewModel = viewModel()
+            val state = vm.state
+
+            Home(state=state, onAction = vm::onAction)
         }
 
-        Log.d("XXXXXX", intent?.getIntExtra("title", -1).toString())
         try {
             oldBrightness =
                 Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS)
@@ -82,9 +85,4 @@ class MainActivity : AppCompatActivity() {
     private fun setBrightness(value: Int) {
         Settings.System.putInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS, value); }
 
-
-    override fun onNewIntent(intent: Intent?) {
-        Log.d("XXXXXX_2", intent?.getIntExtra("title", -1).toString())
-        super.onNewIntent(intent)
-    }
 }
