@@ -1,16 +1,19 @@
 package com.senya.novuswidget.use_case
 
 import android.content.Context
+import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.senya.novuswidget.MainActivity
 import com.senya.novuswidget.domain.CardMapper
 import com.senya.novuswidget.domain.model.ShopItem
 import com.senya.novuswidget.domain.model.ShopItemSP
-import com.senya.novuswidget.gson
 import java.lang.reflect.Type
 
+
 class GetCardsFromStorageUseCase() {
-    operator fun invoke():List<ShopItem> {
+    operator fun invoke(): List<ShopItem> {
+        val gson = Gson()
+
         MainActivity.activityContext().getSharedPreferences("cards", Context.MODE_PRIVATE).apply {
             val type: Type = object : TypeToken<List<ShopItemSP?>?>() {}.type
             val savedCards = getString("items", "")
@@ -23,7 +26,6 @@ class GetCardsFromStorageUseCase() {
             return cardList.map {
                 CardMapper.instance.shopItemSPToShopItem(it)
             }
-
         }
     }
 }

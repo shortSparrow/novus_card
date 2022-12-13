@@ -11,6 +11,7 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.senya.novuswidget.ui.home.Home
+import com.senya.novuswidget.ui.home.HomeViewModel
 
 const val MAX_BRIGHTNESS = 255
 

@@ -8,6 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.senya.novuswidget.ui.home.HomeAction
 
@@ -19,7 +20,7 @@ fun Footer(onAction: (HomeAction) -> Unit) {
 
     Box(
         modifier = Modifier
-            .padding(20.dp)
+            .padding(bottom = 40.dp, top = 20.dp)
             .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
@@ -27,4 +28,10 @@ fun Footer(onAction: (HomeAction) -> Unit) {
             Text(text = "add new card".uppercase())
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FooterPreview() {
+    Footer(onAction = {})
 }

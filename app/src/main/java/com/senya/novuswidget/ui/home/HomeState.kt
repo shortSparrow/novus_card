@@ -7,4 +7,5 @@ data class HomeState(
     val cardList: List<ShopItem> = emptyList(),
     val isAddNewCardModalOpen: Boolean = false,
     val modifiedCard: ModifiedShopItem? = null,
+    val isOpenCardOrderModal: Boolean = false
 )

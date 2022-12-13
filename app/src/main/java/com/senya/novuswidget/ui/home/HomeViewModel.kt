@@ -1,23 +1,21 @@
-package com.senya.novuswidget
+package com.senya.novuswidget.ui.home
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.google.gson.Gson
+import androidx.lifecycle.viewModelScope
 import com.senya.novuswidget.domain.CardMapper
 import com.senya.novuswidget.domain.model.ModifiedShopItem
-import com.senya.novuswidget.ui.home.HomeAction
-import com.senya.novuswidget.ui.home.HomeState
 import com.senya.novuswidget.use_case.AddImageUseCase
 import com.senya.novuswidget.use_case.GetCardsFromStorageUseCase
+import kotlinx.coroutines.launch
 import java.util.*
 
 
-val gson = Gson()
-
 class HomeViewModel : ViewModel() {
     var state by mutableStateOf(HomeState())
+    private val addImageUseCase = AddImageUseCase()
 
     init {
         state = state.copy(cardList = state.cardList.plus(GetCardsFromStorageUseCase().invoke()))
@@ -26,7 +24,7 @@ class HomeViewModel : ViewModel() {
     fun onAction(action: HomeAction) {
         when (action) {
             is HomeAction.AddImage -> {
-                val newCardList = AddImageUseCase().invoke(
+                val newCardList = addImageUseCase.addNewImage(
                     modifiedCard = state.modifiedCard,
                     cardList = state.cardList
                 )
@@ -54,6 +52,16 @@ class HomeViewModel : ViewModel() {
             is HomeAction.SetModifiedCard -> {
                 val modifiedCard = CardMapper.instance.shopItemToModifiedShopItem(action.card)
                 state = state.copy(modifiedCard = modifiedCard, isAddNewCardModalOpen = true)
+            }
+            is HomeAction.SetIsOpenChangeOrderModal -> {
+                state = state.copy(isOpenCardOrderModal = action.isOpen)
+            }
+            is HomeAction.SetNewCardOrder -> {
+                state = state.copy(cardList = action.cardList)
+                viewModelScope.launch {
+                    addImageUseCase.updateSharedPreferencesData(action.cardList)
+                    addImageUseCase.updateWidget()
+                }
             }
         }
     }

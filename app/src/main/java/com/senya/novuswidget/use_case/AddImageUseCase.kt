@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
+import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.senya.novuswidget.MainActivity
 import com.senya.novuswidget.R
@@ -15,7 +16,6 @@ import com.senya.novuswidget.domain.CardMapper
 import com.senya.novuswidget.domain.model.ModifiedShopItem
 import com.senya.novuswidget.domain.model.ShopItem
 import com.senya.novuswidget.domain.model.ShopItemSP
-import com.senya.novuswidget.gson
 import com.senya.novuswidget.widget.NovusCardWidgetProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,13 +25,14 @@ import java.io.File
 import java.io.FileOutputStream
 import java.lang.reflect.Type
 
+val gson = Gson()
 
 class AddImageUseCase() {
     private val context = MainActivity.activityContext()
     private val directory: File =
         ContextWrapper(context).getDir("discount_cards", Context.MODE_PRIVATE)
 
-    operator fun invoke(modifiedCard: ModifiedShopItem?, cardList: List<ShopItem>): List<ShopItem> {
+    fun addNewImage(modifiedCard: ModifiedShopItem?, cardList: List<ShopItem>): List<ShopItem> {
         if (modifiedCard == null) return cardList
 
         // if modifiedCard.uri == null this old file
@@ -108,7 +109,7 @@ class AddImageUseCase() {
         return image
     }
 
-    private fun updateSharedPreferencesData(newCardList: List<ShopItem>) {
+    fun updateSharedPreferencesData(newCardList: List<ShopItem>) {
         CoroutineScope(Dispatchers.IO).launch {
             val type: Type = object : TypeToken<List<ShopItemSP?>?>() {}.type
             val sharedPreference =
@@ -122,7 +123,7 @@ class AddImageUseCase() {
         }
     }
 
-    private fun updateWidget() {
+    fun updateWidget() {
         val appWidgetManager = AppWidgetManager.getInstance(context)
 
         val appWidgetIds = appWidgetManager.getAppWidgetIds(
@@ -132,7 +133,10 @@ class AddImageUseCase() {
             )
         )
         Log.d("XXXX_appWidgetId_UseCas", appWidgetIds.toString())
-        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_discount_card_list)
+        appWidgetManager.notifyAppWidgetViewDataChanged(
+            appWidgetIds,
+            R.id.widget_discount_card_list
+        )
     }
 }
 

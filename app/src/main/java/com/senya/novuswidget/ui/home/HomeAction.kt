@@ -9,4 +9,6 @@ sealed interface HomeAction {
     data class OnChangeCardTitle(val value: String) : HomeAction
     data class SetModifiedCard(val card: ShopItem) : HomeAction
     object AddImage : HomeAction
+    data class SetIsOpenChangeOrderModal (val isOpen: Boolean): HomeAction
+    data class SetNewCardOrder(val cardList: List<ShopItem>): HomeAction
 }
