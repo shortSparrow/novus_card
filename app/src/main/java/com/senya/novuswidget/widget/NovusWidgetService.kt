@@ -4,7 +4,6 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import com.senya.novuswidget.R
@@ -61,7 +60,7 @@ class ListWidgetService : RemoteViewsService() {
         }
 
         override fun getLoadingView(): RemoteViews {
-            return RemoteViews(this@ListWidgetService.packageName, R.layout.novus_card_widget)
+            return RemoteViews(this@ListWidgetService.packageName, R.layout.discount_card_widget)
         }
 
         override fun getViewTypeCount(): Int {

@@ -59,19 +59,27 @@ internal fun updateAppWidget(
     intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
     intent.data = Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME))
 
-    val views = RemoteViews(context.packageName, R.layout.novus_card_widget)
+    val views = RemoteViews(context.packageName, R.layout.discount_card_widget)
 
     val activityIntent = Intent(context, NovusCardWidgetProvider::class.java)
     activityIntent.action = SELECT_CARD_ACTION
     val pendingIntent = PendingIntent.getBroadcast(
         context, 0,
-        activityIntent, 0
+        activityIntent, PendingIntent.FLAG_IMMUTABLE
     )
     views.setPendingIntentTemplate(R.id.widget_discount_card_list, pendingIntent)
-
     views.setRemoteAdapter(R.id.widget_discount_card_list, intent)
     views.setEmptyView(R.id.widget_discount_card_list, R.id.empty_view)
 
+    val emptyViewIntent =Intent(context, MainActivity::class.java)
+    emptyViewIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+    emptyViewIntent.data = Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME))
+    val pendingIntentEmptyView = PendingIntent.getActivity(
+        context, appWidgetId,
+        emptyViewIntent, PendingIntent.FLAG_IMMUTABLE
+    )
+    views.setOnClickPendingIntent(R.id.empty_view, pendingIntentEmptyView)
 
     appWidgetManager.updateAppWidget(appWidgetId, views)
 }
+
