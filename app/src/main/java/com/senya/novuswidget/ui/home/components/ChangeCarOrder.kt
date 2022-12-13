@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.senya.novuswidget.domain.model.ShopItem
 import com.senya.novuswidget.extentios.move
+import com.senya.novuswidget.ui.core.Header
 import com.senya.novuswidget.ui.core.drag_end_drop.rememberDragDropListState
 import com.senya.novuswidget.ui.home.HomeAction
 import kotlinx.coroutines.Job
@@ -49,86 +50,90 @@ fun ChangeCarOrder(cardList: SnapshotStateList<ShopItem>, onAction: (HomeAction)
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(16.dp)
     ) {
-        // TODO add back button
-        Text(
-            text = "Drag and drop for change order",
-            modifier = Modifier
-                .padding(bottom = 20.dp)
-                .fillMaxWidth(),
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            fontSize = 20.sp
+        Header(
+            title = "Drag and drop for change order",
+            onBackButtonClick = { onAction(HomeAction.SetIsOpenChangeOrderModal(false)) },
         )
-        LazyColumn(
+
+        Column(
             modifier = Modifier
-                .weight(1f)
-                .pointerInput(Unit) {
-                    detectDragGesturesAfterLongPress(
-                        onDrag = { change, offset ->
-                            change.consume()
-                            dragDropListState.onDrag(offset)
-
-                            if (overscrollJob?.isActive == true)
-                                return@detectDragGesturesAfterLongPress
-
-                            dragDropListState
-                                .checkForOverScroll()
-                                .takeIf { it != 0f }
-                                ?.let {
-                                    overscrollJob =
-                                        scope.launch { dragDropListState.lazyListState.scrollBy(it) }
-                                }
-                                ?: run { overscrollJob?.cancel() }
-                        },
-                        onDragStart = { offset -> dragDropListState.onDragStart(offset) },
-                        onDragEnd = { dragDropListState.onDragInterrupted() },
-                        onDragCancel = { dragDropListState.onDragInterrupted() }
-                    )
-                },
-            state = dragDropListState.lazyListState,
-            verticalArrangement = Arrangement.Center
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-            itemsIndexed(cardList) { index, item ->
-                Row(
-                    modifier = Modifier
-                        .composed {
-                            val offsetOrNull =
-                                dragDropListState.elementDisplacement.takeIf {
-                                    index == dragDropListState.currentIndexOfDraggedItem
-                                }
-                            Modifier
-                                .graphicsLayer {
-                                    translationY = offsetOrNull ?: 0f
-                                }
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .pointerInput(Unit) {
+                        detectDragGesturesAfterLongPress(
+                            onDrag = { change, offset ->
+                                change.consume()
+                                dragDropListState.onDrag(offset)
 
-                        }
-                        .padding(bottom = 16.dp, top = if (index == 0) 16.dp else 0.dp)
-                        .background(Color.LightGray, RoundedCornerShape(5.dp))
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = (index + 1).toString(),
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(end = 15.dp)
-                    )
-                    AsyncImage(
-                        model = item.uri ?: item.path,
-                        contentDescription = "order card",
-                        modifier = Modifier.size(50.dp)
-                    )
+                                if (overscrollJob?.isActive == true)
+                                    return@detectDragGesturesAfterLongPress
 
-                    Box(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = item.title,
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center
+                                dragDropListState
+                                    .checkForOverScroll()
+                                    .takeIf { it != 0f }
+                                    ?.let {
+                                        overscrollJob =
+                                            scope.launch {
+                                                dragDropListState.lazyListState.scrollBy(
+                                                    it
+                                                )
+                                            }
+                                    }
+                                    ?: run { overscrollJob?.cancel() }
+                            },
+                            onDragStart = { offset -> dragDropListState.onDragStart(offset) },
+                            onDragEnd = { dragDropListState.onDragInterrupted() },
+                            onDragCancel = { dragDropListState.onDragInterrupted() }
                         )
-                    }
+                    },
+                state = dragDropListState.lazyListState,
+                verticalArrangement = Arrangement.Center
+            ) {
+                itemsIndexed(cardList) { index, item ->
+                    Row(
+                        modifier = Modifier
+                            .composed {
+                                val offsetOrNull =
+                                    dragDropListState.elementDisplacement.takeIf {
+                                        index == dragDropListState.currentIndexOfDraggedItem
+                                    }
+                                Modifier
+                                    .graphicsLayer {
+                                        translationY = offsetOrNull ?: 0f
+                                    }
 
+                            }
+                            .padding(bottom = 16.dp, top = if (index == 0) 16.dp else 0.dp)
+                            .background(Color.LightGray, RoundedCornerShape(5.dp))
+                            .padding(horizontal = 16.dp)
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = (index + 1).toString(),
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(end = 15.dp)
+                        )
+                        AsyncImage(
+                            model = item.uri ?: item.path,
+                            contentDescription = "order card",
+                            modifier = Modifier.size(50.dp)
+                        )
+
+                        Box(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = item.title,
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+
+                    }
                 }
             }
         }

@@ -20,7 +20,7 @@ fun Footer(onAction: (HomeAction) -> Unit) {
 
     Box(
         modifier = Modifier
-            .padding(bottom = 40.dp, top = 20.dp)
+            .padding(bottom = 80.dp, top = 20.dp)
             .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {

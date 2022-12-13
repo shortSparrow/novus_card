@@ -1,7 +1,6 @@
 package com.senya.novuswidget.ui.home
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -12,7 +11,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -20,7 +18,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.senya.novuswidget.MainActivity
 import com.senya.novuswidget.R
-import com.senya.novuswidget.ui.ModifyCardItem
+import com.senya.novuswidget.ui.home.components.ModifyCardItem
 import com.senya.novuswidget.ui.core.Header
 import com.senya.novuswidget.ui.extentions.opacityClick
 import com.senya.novuswidget.ui.home.components.CardItem
@@ -84,7 +82,7 @@ fun Home(state: HomeState, onAction: (HomeAction) -> Unit) {
         sheetPeekHeight = 0.dp,
     ) {
         Header(
-            title = "Home",
+            title = "Discount Card List",
             leftIcon = {
                 Surface(Modifier.padding(end = 5.dp)) {
                     Icon(
@@ -96,7 +94,8 @@ fun Home(state: HomeState, onAction: (HomeAction) -> Unit) {
 
                         )
                 }
-            })
+            },
+        )
         Column(modifier = Modifier.fillMaxSize()) {
             LazyRow(
                 Modifier.weight(1f),

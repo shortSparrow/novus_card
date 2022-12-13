@@ -17,14 +17,22 @@ import com.senya.novuswidget.ui.extentions.opacityClick
 @Composable
 fun Header(
     title: String,
-    leftIcon: (@Composable () -> Unit)? = null
+    leftIcon: (@Composable () -> Unit)? = null,
+    onBackButtonClick: (() -> Unit)? = null,
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 10.dp),
+            .padding(horizontal = 10.dp, vertical = 20.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
+        if (onBackButtonClick != null) {
+            Icon(
+                painter = painterResource(id = R.drawable.arrow_back),
+                contentDescription = "back button",
+                modifier = Modifier.opacityClick { onBackButtonClick() }
+            )
+        }
         Text(
             text = title,
             modifier = Modifier.weight(1f),
