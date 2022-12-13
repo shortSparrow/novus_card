@@ -5,6 +5,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -13,7 +14,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.senya.novuswidget.domain.model.ModifiedShopItem
@@ -39,6 +42,16 @@ fun ModifyCardItem(modifiedCard: ModifiedShopItem?, onAction: (HomeAction) -> Un
         Header(
             title = "Add New Image",
             onBackButtonClick = { onAction(HomeAction.ToggleOpenAddNewCardModal(false)) },
+            leftIcon = {
+                if (modifiedCard?.path != null) {
+                    Icon(
+                        painter = painterResource(id = com.senya.novuswidget.R.drawable.delete),
+                        contentDescription = "delete card",
+                        tint = Color.Red,
+                        modifier = Modifier.opacityClick { onAction(HomeAction.DeleteImage) }
+                    )
+                }
+            }
         )
 
         Column(

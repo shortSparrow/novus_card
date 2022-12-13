@@ -7,15 +7,13 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import android.widget.RemoteViews
-import android.widget.Toast
 import com.senya.novuswidget.MainActivity
 import com.senya.novuswidget.R
+import com.senya.novuswidget.util.EXTRA_ITEM
+import com.senya.novuswidget.util.PRESSED_WIDGET_ITEM_INDEX
+import com.senya.novuswidget.util.SELECT_CARD_ACTION
 
-
-const val TOAST_ACTION = "com.example.android.stackwidget.TOAST_ACTION"
-const val EXTRA_ITEM = "com.example.android.stackwidget.EXTRA_ITEM"
 
 class NovusCardWidgetProvider : AppWidgetProvider() {
     override fun onUpdate(
@@ -30,15 +28,12 @@ class NovusCardWidgetProvider : AppWidgetProvider() {
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
-
-        if (TOAST_ACTION == intent?.action) {
+        if (SELECT_CARD_ACTION == intent?.action) {
             val viewIndex = intent.getIntExtra(EXTRA_ITEM, 0)
-            Toast.makeText(context, "Item" + viewIndex + " selected", Toast.LENGTH_SHORT)
-                .show()
 
             val intent2 = Intent(context, MainActivity::class.java)
             intent2.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            intent2.putExtra("title", viewIndex)
+            intent2.putExtra(PRESSED_WIDGET_ITEM_INDEX, viewIndex)
             val pendingIntent = PendingIntent.getActivity(context, 0, intent2, FLAG_UPDATE_CURRENT)
             pendingIntent.send()
         }
@@ -60,34 +55,14 @@ internal fun updateAppWidget(
     appWidgetManager: AppWidgetManager,
     appWidgetId: Int
 ) {
-//    // TODO update layout depend on widget width (N, NOVUS)
-//    val views = RemoteViews(context.packageName, R.layout.novus_card_widget)
-//    val intent = Intent(Intent.ACTION_VIEW)
-//    val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
-//    views.setOnClickPendingIntent(R.id.root, pendingIntent)
-//    // Instruct the widget manager to update the widget
-//    appWidgetManager.updateAppWidget(appWidgetId, views)
-    Log.d("XXXX_appWidgetId: ", appWidgetId.toString())
-
-
     val intent = Intent(context, ListWidgetService::class.java)
     intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
     intent.data = Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME))
 
     val views = RemoteViews(context.packageName, R.layout.novus_card_widget)
 
-// // open app
-//    val activityIntent = Intent(context, MainActivity::class.java)
-//    activityIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-//    activityIntent.data = Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME))
-//    val pendingIntent = PendingIntent.getActivity(
-//        context, appWidgetId,
-//        activityIntent, PendingIntent.FLAG_IMMUTABLE
-//    )
-//    views.setPendingIntentTemplate(R.id.list, pendingIntent)
-
     val activityIntent = Intent(context, NovusCardWidgetProvider::class.java)
-    activityIntent.action = TOAST_ACTION
+    activityIntent.action = SELECT_CARD_ACTION
     val pendingIntent = PendingIntent.getBroadcast(
         context, 0,
         activityIntent, 0

@@ -25,6 +25,13 @@ class CardMapper {
         id = shopItem.id
     )
 
+    fun modifiedShopItemToShopItem(modifiedShopItem: ModifiedShopItem) = ShopItem(
+        title = modifiedShopItem.title,
+        uri = modifiedShopItem.uri,
+        path = modifiedShopItem.path!!,
+        id = modifiedShopItem.id
+    )
+
     companion object {
         val instance = CardMapper()
     }

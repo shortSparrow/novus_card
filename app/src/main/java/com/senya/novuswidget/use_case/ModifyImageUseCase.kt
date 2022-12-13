@@ -1,7 +1,5 @@
 package com.senya.novuswidget.use_case
 
-import android.appwidget.AppWidgetManager
-import android.content.ComponentName
 import android.content.Context
 import android.content.ContextWrapper
 import android.graphics.Bitmap
@@ -11,12 +9,12 @@ import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.senya.novuswidget.MainActivity
-import com.senya.novuswidget.R
 import com.senya.novuswidget.domain.CardMapper
 import com.senya.novuswidget.domain.model.ModifiedShopItem
 import com.senya.novuswidget.domain.model.ShopItem
 import com.senya.novuswidget.domain.model.ShopItemSP
-import com.senya.novuswidget.widget.NovusCardWidgetProvider
+import com.senya.novuswidget.util.DISCOUNT_CARDS_INFO
+import com.senya.novuswidget.util.DISCOUNT_CARDS_LIST
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,7 +25,7 @@ import java.lang.reflect.Type
 
 val gson = Gson()
 
-class AddImageUseCase() {
+class ModifyImageUseCase() {
     private val context = MainActivity.activityContext()
     private val directory: File =
         ContextWrapper(context).getDir("discount_cards", Context.MODE_PRIVATE)
@@ -66,8 +64,20 @@ class AddImageUseCase() {
 
         updateSharedPreferencesData(newCardList)
 
-        updateWidget()
+        UpdateWidgetUseCase().updateWidget()
         return newCardList
+    }
+
+    fun removeImage(deletedItem: ShopItem, newCardList: List<ShopItem>) {
+        val file = File(deletedItem.path)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO) {
+                file.delete()
+            }
+        }
+
+        updateSharedPreferencesData(newCardList)
     }
 
     private fun saveImage(
@@ -93,7 +103,7 @@ class AddImageUseCase() {
                     image.compress(Bitmap.CompressFormat.PNG, 100, fos)
                     fos.close()
                 } catch (e: Exception) {
-                    Log.e("SAVE_IMAGE", e.message, e)
+                    Log.e("SAVE_IMAGE_ERR", e.message, e)
                 }
             }
         }
@@ -109,34 +119,19 @@ class AddImageUseCase() {
         return image
     }
 
+
     fun updateSharedPreferencesData(newCardList: List<ShopItem>) {
         CoroutineScope(Dispatchers.IO).launch {
             val type: Type = object : TypeToken<List<ShopItemSP?>?>() {}.type
             val sharedPreference =
-                context.getSharedPreferences("cards", Context.MODE_PRIVATE)
+                context.getSharedPreferences(DISCOUNT_CARDS_INFO, Context.MODE_PRIVATE)
             val editor = sharedPreference.edit()
             val json = gson.toJson(newCardList.map {
                 CardMapper.instance.shopItemToShopItemSP(it)
             }, type)
-            editor.putString("items", json)
+            editor.putString(DISCOUNT_CARDS_LIST, json)
             editor.apply()
         }
-    }
-
-    fun updateWidget() {
-        val appWidgetManager = AppWidgetManager.getInstance(context)
-
-        val appWidgetIds = appWidgetManager.getAppWidgetIds(
-            ComponentName(
-                context,
-                NovusCardWidgetProvider::class.java
-            )
-        )
-        Log.d("XXXX_appWidgetId_UseCas", appWidgetIds.toString())
-        appWidgetManager.notifyAppWidgetViewDataChanged(
-            appWidgetIds,
-            R.id.widget_discount_card_list
-        )
     }
 }
 

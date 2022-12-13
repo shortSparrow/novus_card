@@ -12,8 +12,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.senya.novuswidget.MainActivity
@@ -24,6 +26,7 @@ import com.senya.novuswidget.ui.extentions.opacityClick
 import com.senya.novuswidget.ui.home.components.CardItem
 import com.senya.novuswidget.ui.home.components.ChangeCarOrder
 import com.senya.novuswidget.ui.home.components.Footer
+import com.senya.novuswidget.util.PRESSED_WIDGET_ITEM_INDEX
 import kotlinx.coroutines.launch
 
 
@@ -61,7 +64,7 @@ fun Home(state: HomeState, onAction: (HomeAction) -> Unit) {
         }
     }
 
-    val initialListPosition = MainActivity.activityContext().intent?.getIntExtra("title", 0) ?: 0
+    val initialListPosition = MainActivity.activityContext().intent?.getIntExtra(PRESSED_WIDGET_ITEM_INDEX, 0) ?: 0
     val listState = rememberLazyListState(initialFirstVisibleItemIndex = initialListPosition)
 
     if (state.isOpenCardOrderModal) {
@@ -97,11 +100,29 @@ fun Home(state: HomeState, onAction: (HomeAction) -> Unit) {
             },
         )
         Column(modifier = Modifier.fillMaxSize()) {
+            if (state.cardList.isEmpty()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "There are no any card",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                        modifier = Modifier.padding(bottom = 20.dp)
+                    )
+                    OutlinedButton(onClick = { onAction(HomeAction.ToggleOpenAddNewCardModal(true)) }) {
+                        Text(text = "add your first card".uppercase())
+                    }
+                }
+            }
             LazyRow(
                 Modifier.weight(1f),
                 verticalAlignment = Alignment.CenterVertically,
                 state = listState,
-                flingBehavior = ScrollableDefaults.flingBehavior()
+                flingBehavior = ScrollableDefaults.flingBehavior(),
             ) {
                 items(state.cardList) { cardItem ->
                     CardItem(

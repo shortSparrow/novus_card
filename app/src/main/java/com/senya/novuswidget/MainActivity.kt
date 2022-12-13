@@ -33,8 +33,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.d("XXXXXX", intent?.getIntExtra("title", 0).toString())
-
         setContent {
             val vm: HomeViewModel = viewModel()
             val state = vm.state

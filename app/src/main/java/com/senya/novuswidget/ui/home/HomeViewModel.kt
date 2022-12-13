@@ -7,15 +7,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.senya.novuswidget.domain.CardMapper
 import com.senya.novuswidget.domain.model.ModifiedShopItem
-import com.senya.novuswidget.use_case.AddImageUseCase
+import com.senya.novuswidget.domain.model.ShopItem
+import com.senya.novuswidget.use_case.ModifyImageUseCase
 import com.senya.novuswidget.use_case.GetCardsFromStorageUseCase
+import com.senya.novuswidget.use_case.UpdateWidgetUseCase
 import kotlinx.coroutines.launch
 import java.util.*
 
 
 class HomeViewModel : ViewModel() {
     var state by mutableStateOf(HomeState())
-    private val addImageUseCase = AddImageUseCase()
+    private val modifyImageUseCase = ModifyImageUseCase()
+    private val updateWidgetUseCase = UpdateWidgetUseCase()
 
     init {
         state = state.copy(cardList = state.cardList.plus(GetCardsFromStorageUseCase().invoke()))
@@ -24,7 +27,7 @@ class HomeViewModel : ViewModel() {
     fun onAction(action: HomeAction) {
         when (action) {
             is HomeAction.AddImage -> {
-                val newCardList = addImageUseCase.addNewImage(
+                val newCardList = modifyImageUseCase.addNewImage(
                     modifiedCard = state.modifiedCard,
                     cardList = state.cardList
                 )
@@ -59,8 +62,22 @@ class HomeViewModel : ViewModel() {
             is HomeAction.SetNewCardOrder -> {
                 state = state.copy(cardList = action.cardList)
                 viewModelScope.launch {
-                    addImageUseCase.updateSharedPreferencesData(action.cardList)
-                    addImageUseCase.updateWidget()
+                    modifyImageUseCase.updateSharedPreferencesData(action.cardList)
+                    updateWidgetUseCase.updateWidget()
+                }
+            }
+            HomeAction.DeleteImage -> {
+                state =
+                    state.copy(cardList = state.cardList.filter { it.id != state.modifiedCard?.id }, isAddNewCardModalOpen = false)
+                val removeItem= CardMapper.instance.modifiedShopItemToShopItem(
+                    state.modifiedCard!! // I am sure, that path exist, because we delete already existing file
+                )
+                viewModelScope.launch {
+                    modifyImageUseCase.removeImage(
+                        deletedItem = removeItem,
+                        newCardList = state.cardList
+                    )
+                    updateWidgetUseCase.updateWidget()
                 }
             }
         }

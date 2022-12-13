@@ -23,10 +23,10 @@ import com.senya.novuswidget.ui.home.HomeAction
 @Composable
 fun CardItem(cardItem: ShopItem, onAction: (HomeAction) -> Unit) {
     val configuration = LocalConfiguration.current
-    val cardItemSize = configuration.screenWidthDp - 100
+    val cardItemSize = configuration.screenWidthDp - 20
 
     Column(
-        modifier = Modifier.padding(horizontal = 20.dp),
+        modifier = Modifier.padding(horizontal = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
