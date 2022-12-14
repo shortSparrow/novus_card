@@ -64,7 +64,8 @@ fun Home(state: HomeState, onAction: (HomeAction) -> Unit) {
         }
     }
 
-    val initialListPosition = MainActivity.activityContext().intent?.getIntExtra(PRESSED_WIDGET_ITEM_INDEX, 0) ?: 0
+    val initialListPosition =
+        MainActivity.activityContext().intent?.getIntExtra(PRESSED_WIDGET_ITEM_INDEX, 0) ?: 0
     val listState = rememberLazyListState(initialFirstVisibleItemIndex = initialListPosition)
 
     if (state.isOpenCardOrderModal) {
@@ -87,15 +88,17 @@ fun Home(state: HomeState, onAction: (HomeAction) -> Unit) {
         Header(
             title = "Discount Card List",
             leftIcon = {
-                Surface(Modifier.padding(end = 5.dp)) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.sort),
-                        contentDescription = "change card order",
-                        modifier = Modifier
-                            .opacityClick { onAction(HomeAction.SetIsOpenChangeOrderModal(true)) }
-                            .size(18.dp),
+                if (state.cardList.isNotEmpty()) {
+                    Surface(Modifier.padding(end = 5.dp)) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.sort),
+                            contentDescription = "change card order",
+                            modifier = Modifier
+                                .opacityClick { onAction(HomeAction.SetIsOpenChangeOrderModal(true)) }
+                                .size(18.dp),
 
-                        )
+                            )
+                    }
                 }
             },
         )
