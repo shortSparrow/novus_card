@@ -8,6 +8,7 @@ import android.net.Uri
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.senya.novuswidget.DiscountCardApp
 import com.senya.novuswidget.MainActivity
 import com.senya.novuswidget.domain.CardMapper
 import com.senya.novuswidget.domain.model.ModifiedShopItem
@@ -26,7 +27,7 @@ import java.lang.reflect.Type
 val gson = Gson()
 
 class ModifyImageUseCase() {
-    private val context = MainActivity.activityContext()
+    private val context = DiscountCardApp.applicationContext()
     private val directory: File =
         ContextWrapper(context).getDir("discount_cards", Context.MODE_PRIVATE)
 

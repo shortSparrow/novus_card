@@ -26,14 +26,18 @@ import com.senya.novuswidget.ui.extentions.opacityClick
 import com.senya.novuswidget.ui.home.components.CardItem
 import com.senya.novuswidget.ui.home.components.ChangeCarOrder
 import com.senya.novuswidget.ui.home.components.Footer
+import com.senya.novuswidget.util.DEFAULT_INITIAL_CARD_POSITION
 import com.senya.novuswidget.util.PRESSED_WIDGET_ITEM_INDEX
 import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
-fun Home(state: HomeState, onAction: (HomeAction) -> Unit) {
-    // TODO maybe on click open full screen image
+fun Home(
+    state: HomeState,
+    onAction: (HomeAction) -> Unit,
+    initialListPosition: Int = DEFAULT_INITIAL_CARD_POSITION
+) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberBottomSheetState(BottomSheetValue.Collapsed)
@@ -64,9 +68,10 @@ fun Home(state: HomeState, onAction: (HomeAction) -> Unit) {
         }
     }
 
-    val initialListPosition =
-        MainActivity.activityContext().intent?.getIntExtra(PRESSED_WIDGET_ITEM_INDEX, 0) ?: 0
-    val listState = rememberLazyListState(initialFirstVisibleItemIndex = initialListPosition)
+    val listState = rememberLazyListState()
+    LaunchedEffect(initialListPosition) {
+        listState.scrollToItem(initialListPosition)
+    }
 
     if (state.isOpenCardOrderModal) {
         Dialog(

@@ -23,7 +23,7 @@ class ListWidgetService : RemoteViewsService() {
 
     internal inner class ListRemoteViewsFactory(private val mContext: Context, intent: Intent) :
         RemoteViewsFactory {
-        private val mWidgetItems: MutableList<WidgetItem> = ArrayList<WidgetItem>()
+        private val mWidgetItems: MutableList<WidgetItem> = ArrayList()
         private val mAppWidgetId: Int
 
         init {

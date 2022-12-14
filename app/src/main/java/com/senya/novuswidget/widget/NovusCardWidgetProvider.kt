@@ -72,6 +72,15 @@ internal fun updateAppWidget(
     views.setRemoteAdapter(R.id.widget_discount_card_list, intent)
     views.setEmptyView(R.id.widget_discount_card_list, R.id.empty_view)
 
+    val emptyViewIntent = Intent(context, MainActivity::class.java)
+    emptyViewIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+    emptyViewIntent.data = Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME))
+    val pendingIntentEmptyView = PendingIntent.getActivity(
+        context, appWidgetId,
+        emptyViewIntent, 0
+    )
+    views.setOnClickPendingIntent(R.id.empty_view, pendingIntentEmptyView)
+
 
     appWidgetManager.updateAppWidget(appWidgetId, views)
 }
