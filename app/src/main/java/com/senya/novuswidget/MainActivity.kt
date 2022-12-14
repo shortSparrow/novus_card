@@ -7,16 +7,31 @@ import android.os.Bundle
 import android.provider.Settings
 import android.provider.Settings.SettingNotFoundException
 import android.util.Log
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.senya.novuswidget.ui.home.Home
+import com.senya.novuswidget.ui.home.HomeViewModel
+import com.senya.novuswidget.util.DEFAULT_INITIAL_CARD_POSITION
+import com.senya.novuswidget.util.PRESSED_WIDGET_ITEM_INDEX
 
 const val MAX_BRIGHTNESS = 255
 
 class MainActivity : AppCompatActivity() {
     private var oldBrightness: Int? = null
+    var initialListPosition by mutableStateOf(DEFAULT_INITIAL_CARD_POSITION)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        initialListPosition = intent?.getIntExtra(PRESSED_WIDGET_ITEM_INDEX, DEFAULT_INITIAL_CARD_POSITION) ?: DEFAULT_INITIAL_CARD_POSITION
+        setContent {
+            val vm: HomeViewModel = viewModel()
+            val state = vm.state
+            Home(state = state, onAction = vm::onAction, initialListPosition = initialListPosition)
+        }
 
         try {
             oldBrightness =
@@ -25,6 +40,12 @@ class MainActivity : AppCompatActivity() {
             Log.e("Error", "Cannot access system brightness")
             e.printStackTrace()
         }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        val newInitialListPosition = intent?.getIntExtra(PRESSED_WIDGET_ITEM_INDEX, DEFAULT_INITIAL_CARD_POSITION) ?: DEFAULT_INITIAL_CARD_POSITION
+        initialListPosition = newInitialListPosition
     }
 
     override fun onStop() {

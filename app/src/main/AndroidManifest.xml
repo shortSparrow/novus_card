@@ -7,6 +7,7 @@
         tools:ignore="ProtectedPermissions" />
 
     <application
+        android:name=".DiscountCardApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -16,8 +17,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NovusWidget"
         tools:targetApi="31">
+        <service
+            android:name=".widget.ListWidgetService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
         <receiver
-            android:name=".NovusCardWidget"
+            android:name=".widget.NovusCardWidgetProvider"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -30,7 +36,9 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleInstance"
+            android:screenOrientation="fullSensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
