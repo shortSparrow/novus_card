@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Novus Card</string>
-    <string name="app_widget_description">Novus Discount card</string>
+    <string name="app_name">Discount Cards</string>
+    <string name="app_widget_description">Discount cards widget for faster getting access to your discount cards</string>
     <string name="add_first_card">ADD FIRST CARD</string>
 </resources>
