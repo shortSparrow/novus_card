@@ -1,7 +1,7 @@
 package com.senya.novuswidget.widget
 
 import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_UPDATE_CURRENT
+import android.app.PendingIntent.*
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
@@ -30,11 +30,10 @@ class NovusCardWidgetProvider : AppWidgetProvider() {
     override fun onReceive(context: Context?, intent: Intent?) {
         if (SELECT_CARD_ACTION == intent?.action) {
             val viewIndex = intent.getIntExtra(EXTRA_ITEM, 0)
-
             val intent2 = Intent(context, MainActivity::class.java)
             intent2.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             intent2.putExtra(PRESSED_WIDGET_ITEM_INDEX, viewIndex)
-            val pendingIntent = PendingIntent.getActivity(context, 0, intent2, FLAG_UPDATE_CURRENT)
+            val pendingIntent = getActivity(context, 0, intent2, FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT)
             pendingIntent.send()
         }
         super.onReceive(context, intent)
@@ -65,7 +64,7 @@ internal fun updateAppWidget(
     activityIntent.action = SELECT_CARD_ACTION
     val pendingIntent = PendingIntent.getBroadcast(
         context, 0,
-        activityIntent, 0
+        activityIntent, FLAG_MUTABLE
     )
     views.setPendingIntentTemplate(R.id.widget_discount_card_list, pendingIntent)
 
@@ -77,7 +76,7 @@ internal fun updateAppWidget(
     emptyViewIntent.data = Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME))
     val pendingIntentEmptyView = PendingIntent.getActivity(
         context, appWidgetId,
-        emptyViewIntent, 0
+        emptyViewIntent, FLAG_MUTABLE
     )
     views.setOnClickPendingIntent(R.id.empty_view, pendingIntentEmptyView)
 

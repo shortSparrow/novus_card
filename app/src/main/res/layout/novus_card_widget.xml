@@ -1,18 +1,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     style="@style/Widget.NovusWidget.AppWidget.Container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="85dp"
     android:theme="@style/Theme.NovusWidget.AppWidgetContainer">
 
     <ListView
         android:id="@+id/widget_discount_card_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:loopViews="true" />
+        tools:listitem="@layout/widget_item" />
 
     <TextView
+        tools:visibility="gone"
         android:id="@+id/empty_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
