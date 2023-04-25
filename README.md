@@ -1,4 +1,10 @@
-# Discount cards
+# Android app for discount cards
+
+## Features
+- Adding discount cards (just image)
+- Change discount cards order
+- Add widget on phone screen for quickly access to your cards
+
 
 ## Widget demo
 
